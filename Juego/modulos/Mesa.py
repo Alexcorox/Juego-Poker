@@ -1,7 +1,7 @@
 """
 
 """
-from modulos.Jugador import Jugador
+from Juego.modulos.Jugador import Jugador
 from typeguard import typechecked
 
 

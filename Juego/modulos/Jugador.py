@@ -1,7 +1,5 @@
-import random
-
 from typeguard import typechecked
-from modulos.Dado import Dado
+from Juego.modulos.Dado import Dado
 from typing import Optional
 import random
 
