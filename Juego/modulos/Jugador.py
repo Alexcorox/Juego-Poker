@@ -3,10 +3,11 @@ from Juego.modulos.Dado import Dado
 from typing import Optional
 import random
 
+
 @typechecked
 class Jugador:
-    def __init__(self, id: int):
-        self.__id = self.validarID(id)
+    def __init__(self, id_jugador: int):
+        self.__id = self.__validar_id(id_jugador)
         self.__tiros = 0
         self.__dados = []
         self.__crear_dados()
@@ -17,37 +18,32 @@ class Jugador:
             dado = Dado()
             self.__dados.append(dado)
 
-    def validarID(self, id):
-        if id < 0:
+    @staticmethod
+    def __validar_id(id_jugador):
+        if id_jugador < 0:
             raise ValueError('El id debe ser un número positivo')
-        return id
+        return id_jugador
 
     def calcular_puntuacion(self) -> None:
         puntuacion = 0
         caras = {}
-        cara_comparada = 1
-        repetido = 0
 
         for i in self.__dados:
             if i.cara_actual in caras:
                 continue
             caras[i.cara_actual] = 0
-        print(f'{caras}')
+
         for i in self.__dados:
             if i.cara_actual in caras:
                 caras[i.cara_actual] += 1
-                print(f'{caras[i.cara_actual]}')
-
             else:
                 continue
-        print(caras)
 
         npares = 0
         ntrio = 0
         ncuartetos = 0
         nquinteto = 0
         valores = caras.values()
-        print(valores)
         for i in valores:
             if i == 5:
                 nquinteto += 1
@@ -89,9 +85,9 @@ class Jugador:
         for i in self.__dados:
             contador += 1
             print(f"Dado {contador}: {i.cara_actual}")
+        print("")
 
-        return repr(f'Tirada del jugador {self.__id+1}')
-
+        return f"Tirada del jugador {self.__id+1}"
 
     @property
     def id(self):
@@ -109,7 +105,7 @@ class Jugador:
     def puntos(self):
         return self.__puntos
 
-    def tirarDados(self, posiciones: Optional[list] = None):
+    def tirar_dados(self, posiciones: Optional[list] = None):
         if posiciones is None:
             for tiro in self.__dados:
                 tiro.cara_actual = random.choice(tiro.caras_dado)
