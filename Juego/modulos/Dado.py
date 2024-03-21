@@ -1,12 +1,11 @@
-
 class Dado:
 
     """
-    Esta clase simplente se encarga de crear el objeto dado
+        Esta clase simplente se encarga de crear el objeto dado
     """
     def __init__(self):
-        self.__caras_dado = [1, 2, 3, 4, 5, 6]
-        self.__cara_actual = 0
+        self.__caras_dado = [1, 2, 3, 4, 5, 6]  # Valores permitidos para la cara del dado
+        self.__cara_actual = 0  # Cara actual del dado
 
     @property
     def cara_actual(self):
