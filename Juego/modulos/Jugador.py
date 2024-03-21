@@ -3,55 +3,75 @@ from Juego.modulos.Dado import Dado
 from typing import Optional
 import random
 
+
 @typechecked
 class Jugador:
-    def __init__(self, id: int):
-        self.__id = self.validarID(id)
-        self.__tiros = 0
-        self.__dados = []
-        self.__crear_dados()
-        self.__puntos = 0
+    """
+        Esta clase es la que contiene los metodos de jugador y su funcionamiento.
+        Como parametro recibe el id del jugador.
+    """
+    def __init__(self, id_jugador: int):
+        self.__id = self.__validar_id(id_jugador)  # Se verifica la id del jugador antes de asignarla
+        self.__dados = []  # Lista donde se almacenaran los dados
+        self.__crear_dados()  # Llamada al metodo privado crear los dados
+        self.__puntos = 0  # Puntuacion del jugador
 
     def __crear_dados(self):
+        # Se crean 5 dados y se añaden a la lista de dados
         for i in range(0, 5):
             dado = Dado()
             self.__dados.append(dado)
 
-    def validarID(self, id):
-        if id < 0:
+    @staticmethod
+    def __validar_id(id_jugador):
+        if id_jugador < 0:
             raise ValueError('El id debe ser un número positivo')
-        return id
+        return id_jugador
 
-    def calcular_puntuacion(self) -> None:
+    @property
+    def id(self):
+        return self.__id
+
+    @property
+    def dados(self):
+        return self.__dados
+
+    @property
+    def puntos(self):
+        return self.__puntos
+
+    def calcular_puntuacion(self) -> None: # Este método calcula la puntuación que tiene en la mano el jugador
         puntuacion = 0
-        caras = {}
-        cara_comparada = 1
-        repetido = 0
+        caras = {} # En este diccionario se almacena el valor de las caras como la key y las veces que sale es el valor
 
-        for i in self.__dados:
+        for i in self.__dados: # Este bucle se encarga de introducir el valor de las caras en el diccionario
+            if i.cara_actual in caras:
+                continue
             caras[i.cara_actual] = 0
 
-        for i in self.__dados:
-            if i.cara_actual == cara_comparada:
-                repetido += 1
+        for i in self.__dados:  # Este bucle se encarga de contavilizar cuantas veces se repite un dado
+            if i.cara_actual in caras:
+                caras[i.cara_actual] += 1
+            else:
+                continue
 
-            cara_comparada += 1
-            caras[i.cara_actual] = repetido
-
-
-        npares = 0
+        npares = 0  # A partir de aqui contamos las veces que hay combinaciones para luego poder calcular la puntucación
         ntrio = 0
         ncuartetos = 0
         nquinteto = 0
         valores = caras.values()
-        if 2 in valores:
-            npares += 1
-        if 3 in valores:
-            ntrio += 1
-        if 4 in valores:
+        for i in valores:
+            if i == 5:
+                nquinteto += 1
+            if i == 4:
+                ncuartetos += 1
+            if i == 3:
+                ntrio += 1
+            if i == 2:
+                npares += 1
+        if npares > 1:
+            npares = 0
             ncuartetos += 1
-        if 5 in valores:
-            nquinteto += 1
         # Calculo la puntuación
         if nquinteto == 1:
             puntuacion += 8
@@ -76,35 +96,22 @@ class Jugador:
 
         self.__puntos = puntuacion
 
+    def tirar_dados(self, posiciones: Optional[list] = None):
+        # Si no se ha recibido posiciones (es decir el usuario no ha hecho una segunda tirada)
+        if posiciones is None:
+            for tiro in self.__dados:  # Recorremos la lista de los dados y escogemos una nueva cara
+                tiro.cara_actual = random.choice(tiro.caras_dado)
+        else:  # Si posiciones si tiene valor (hay segunda tirada)
+            for dado in posiciones:  # Recorremos la lista de las posiciones
+                # Cambiamos la cara de de los dados que el usuario ha elegido
+                self.__dados[dado-1].cara_actual = random.choice(self.__dados[0].caras_dado)
+
     def __str__(self):
         contador = 0
+        # Se recorre la lista de los dados y se muestra el numero del dao y su cara actual
         for i in self.__dados:
             contador += 1
             print(f"Dado {contador}: {i.cara_actual}")
+        print("")
 
-        return repr(f'Tirada del jugador {self.__id+1}')
-
-
-    @property
-    def id(self):
-        return self.__id
-
-    @property
-    def tiros(self):
-        return self.__tiros
-
-    @property
-    def dados(self):
-        return self.__dados
-
-    @property
-    def puntos(self):
-        return self.__puntos
-
-    def tirarDados(self, posiciones: Optional[list] = None):
-        if posiciones is None:
-            for tiro in self.__dados:
-                tiro.cara_actual = random.choice(tiro.caras_dado)
-        else:
-            for dado in posiciones:
-                self.__dados[dado-1].cara_actual = random.choice(self.__dados[1].caras_dado)
+        return f"Tirada del jugador {self.__id+1}"
