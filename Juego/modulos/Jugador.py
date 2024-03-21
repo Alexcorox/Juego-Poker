@@ -40,22 +40,22 @@ class Jugador:
     def puntos(self):
         return self.__puntos
 
-    def calcular_puntuacion(self) -> None:
+    def calcular_puntuacion(self) -> None: # Este método calcula la puntuación que tiene en la mano el jugador
         puntuacion = 0
-        caras = {}
+        caras = {} # En este diccionario se almacena el valor de las caras como la key y las veces que sale es el valor
 
-        for i in self.__dados:
+        for i in self.__dados: # Este bucle se encarga de introducir el valor de las caras en el diccionario
             if i.cara_actual in caras:
                 continue
             caras[i.cara_actual] = 0
 
-        for i in self.__dados:
+        for i in self.__dados:  # Este bucle se encarga de contavilizar cuantas veces se repite un dado
             if i.cara_actual in caras:
                 caras[i.cara_actual] += 1
             else:
                 continue
 
-        npares = 0
+        npares = 0  # A partir de aqui contamos las veces que hay combinaciones para luego poder calcular la puntucación
         ntrio = 0
         ncuartetos = 0
         nquinteto = 0
