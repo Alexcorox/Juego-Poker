@@ -29,29 +29,37 @@ class Jugador:
         repetido = 0
 
         for i in self.__dados:
+            if i.cara_actual in caras:
+                continue
             caras[i.cara_actual] = 0
-
+        print(f'{caras}')
         for i in self.__dados:
-            if i.cara_actual == cara_comparada:
-                repetido += 1
+            if i.cara_actual in caras:
+                caras[i.cara_actual] += 1
+                print(f'{caras[i.cara_actual]}')
 
-            cara_comparada += 1
-            caras[i.cara_actual] = repetido
-
+            else:
+                continue
+        print(caras)
 
         npares = 0
         ntrio = 0
         ncuartetos = 0
         nquinteto = 0
         valores = caras.values()
-        if 2 in valores:
-            npares += 1
-        if 3 in valores:
-            ntrio += 1
-        if 4 in valores:
+        print(valores)
+        for i in valores:
+            if i == 5:
+                nquinteto += 1
+            if i == 4:
+                ncuartetos += 1
+            if i == 3:
+                ntrio += 1
+            if i == 2:
+                npares += 1
+        if npares > 1:
+            npares = 0
             ncuartetos += 1
-        if 5 in valores:
-            nquinteto += 1
         # Calculo la puntuación
         if nquinteto == 1:
             puntuacion += 8
